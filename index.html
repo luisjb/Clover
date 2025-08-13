@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Integración con Clover</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+        
+        .status-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-connected { background: #4CAF50; }
+        .status-pending { background: #FF9800; }
+        .status-error { background: #f44336; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5em; }
+            .header p { font-size: 1.1em; }
+            .container { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Mi Integración POS</h1>
+            <p>Conecta tu sistema Point of Sale con Clover para procesar pagos de forma segura y eficiente</p>
+        </div>
+
+        <div class="status-section">
+            <h3>📊 Estado de la Integración</h3>
+            <div id="connection-status">
+                <p><span class="status-indicator status-pending"></span> Verificando conexión con Clover...</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <span class="feature-icon">💳</span>
+                <h3>Procesamiento de Pagos</h3>
+                <p>Acepta tarjetas de crédito, débito y otros métodos de pago directamente desde tu POS</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h3>Dispositivos Pocket & Flex</h3>
+                <p>Compatible con terminales móviles Clover Pocket y Flex para máxima flexibilidad</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3>Seguridad PCI</h3>
+                <p>Cumple con los estándares de seguridad PCI DSS para proteger los datos de tus clientes</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3>Reportes en Tiempo Real</h3>
+                <p>Accede a reportes detallados de ventas y transacciones desde tu dashboard</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <h3>Sincronización Automática</h3>
+                <p>Mantén tu inventario y órdenes sincronizados entre Clover y tu sistema</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>API REST</h3>
+                <p>Integración completa usando la API REST v3 de Clover con OAuth 2.0</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>🔗 Conectar con Clover</h2>
+            <p style="margin-bottom: 30px;">Para comenzar a usar esta integración, necesitas autorizar el acceso a tu cuenta de Clover</p>
+            
+            <a href="#" class="btn" id="connect-btn" onclick="startOAuth()">
+                🔐 Conectar con Clover
+            </a>
+            
+            <a href="/callback.html" class="btn btn-secondary">
+                🔧 Probar Callback
+            </a>
+            
+            <div style="margin-top: 30px;">
+                <h4>📋 ¿Qué sucede cuando te conectas?</h4>
+                <ol style="text-align: left; max-width: 500px; margin: 20px auto;">
+                    <li>Serás redirigido a Clover para autorizar la conexión</li>
+                    <li>Otorgas permisos para acceder a órdenes y pagos</li>
+                    <li>Recibes tokens de acceso seguros para la API</li>
+                    <li>Tu POS queda conectado y listo para procesar pagos</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🛠️ Desarrollado para integración con Clover POS | v1.0.0</p>
+            <p>Para soporte técnico, contacta a tu equipo de desarrollo</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuración OAuth - reemplaza con tus valores reales
+        const OAUTH_CONFIG = {
+            clientId: 'BQA69R3NPK6MC', // Reemplazar
+            redirectUri: window.location.origin + '/callback.html',
+            oauthBaseUrl: 'https://sandbox.dev.clover.com' // sandbox
+        };
+
+        function startOAuth() {
+            // Verificar que esté configurado
+            if (OAUTH_CONFIG.clientId === 'TU_CLIENT_ID') {
+                alert('⚠️ Por favor configura tu Client ID en el código antes de continuar');
+                return;
+            }
+
+            // Construir URL de autorización
+            const params = new URLSearchParams({
+                client_id: OAUTH_CONFIG.clientId,
+                redirect_uri: OAUTH_CONFIG.redirectUri,
+                response_type: 'code'
+            });
+
+            const authUrl = `${OAUTH_CONFIG.oauthBaseUrl}/oauth/v2/authorize?${params.toString()}`;
+            
+            // Redirigir a Clover para autorización
+            window.location.href = authUrl;
+        }
+
+        function checkConnectionStatus() {
+            const statusDiv = document.getElementById('connection-status');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            // Verificar si hay tokens guardados
+            const accessToken = localStorage.getItem('clover_access_token');
+            
+            if (accessToken) {
+                statusDiv.innerHTML = `
+                    <p><span class="status-indicator status-connected"></span> ✅ Conectado con Clover</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Token válido encontrado. Tu integración está activa.</p>
+                `;
+                connectBtn.textContent = '🔄 Reconectar';
+            } else {
+                statusDiv.innerHTML = `
+                    <p><span class="status-indicator status-pending"></span> ⏳ Sin conexión</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Haz clic en "Conectar con Clover" para autorizar la integración.</p>
+                `;
+            }
+        }
+
+        // Verificar parámetros de URL (si viene del merchant redirect)
+        function checkMerchantRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const merchantId = urlParams.get('merchant_id');
+            
+            if (merchantId) {
+                // El merchant fue redirigido aquí desde Clover
+                document.getElementById('connection-status').innerHTML = `
+                    <p><span class="status-indicator status-pending"></span> 🏪 Merchant detectado: ${merchantId}</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Haz clic en "Conectar con Clover" para completar la autorización.</p>
+                `;
+            }
+        }
+
+        // Ejecutar al cargar la página
+        window.onload = function() {
+            checkConnectionStatus();
+            checkMerchantRedirect();
+        };
+    </script>
+</body>
+</html>
