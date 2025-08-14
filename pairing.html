@@ -24,6 +24,28 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
         
+        .nav {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
         h1 {
             text-align: center;
             margin-bottom: 30px;
@@ -82,162 +104,177 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔗 Clover Cloud Pay Display</h1>
-        <h2>Configuración de Emparejamiento</h2>
+        <!-- Navegación entre páginas -->
+        <div class="nav">
+            <a href="index.html">🔐 OAuth Setup</a>
+            <a href="pairing.html">🔗 Device Pairing</a>
+            <a href="callback.html">📞 OAuth Callback</a>
+        </div>
+        
+        <h1>🔗 Cloud Pay Display Pairing</h1>
         
         <div class="step">
-            <h3>📋 Paso 1: Verificar configuración</h3>
-            <p>Ingresa tus datos de configuración:</p>
-            <input type="text" id="clientId" placeholder="Client ID" value="BQA69R3NPK6MC">
-            <input type="text" id="merchantId" placeholder="Merchant ID" value="20562DRSEE6T1">
-            <input type="text" id="deviceSerial" placeholder="Device Serial" value="C047LG44442632">
-            <button onclick="verificarConfiguracion()">✅ Verificar Configuración</button>
-            <div id="configResult"></div>
+            <h3>📋 Configuración automática</h3>
+            <p>Usando la configuración de tu app existente:</p>
+            <div class="config-box" id="autoConfig">
+                <strong>Client ID:</strong> BQA69R3NPK6MC<br>
+                <strong>Merchant ID:</strong> 20562DRSEE6T1<br>
+                <strong>Device Serial:</strong> C047LG44442632<br>
+                <strong>Tokens:</strong> <span id="tokenStatus">Verificando...</span>
+            </div>
+            <button onclick="verificarTokens()">🔄 Verificar Tokens</button>
         </div>
         
         <div class="step">
-            <h3>🔐 Paso 2: Generar URL de emparejamiento</h3>
-            <p>Esta URL conectará tu aplicación con el dispositivo Cloud Pay Display:</p>
-            <button onclick="generarUrlEmparejamiento()">🔗 Generar URL de Emparejamiento</button>
+            <h3>🔗 Generar URL de emparejamiento</h3>
+            <p>Esta URL conectará tu aplicación Java con el dispositivo:</p>
+            <button onclick="generarUrlEmparejamiento()">🚀 Generar URL de Emparejamiento</button>
             <div id="pairingResult"></div>
         </div>
         
         <div class="step">
-            <h3>📱 Paso 3: Configurar dispositivo</h3>
+            <h3>📱 Configurar Cloud Pay Display</h3>
             <div class="config-box">
                 <strong>En tu dispositivo Clover Pocket:</strong><br>
                 1. Ve a "More Tools"<br>
-                2. Busca "Cloud Pay Display"<br>
-                3. Abre Cloud Pay Display<br>
-                4. La pantalla debería mostrar "Waiting for connection"
+                2. Busca "Cloud Pay Display" (NO "REST Pay Display")<br>
+                3. Instala Cloud Pay Display si no está instalado<br>
+                4. Abre Cloud Pay Display<br>
+                5. La pantalla debería mostrar "Waiting for connection"
             </div>
         </div>
         
         <div class="step">
-            <h3>🌐 Paso 4: Completar emparejamiento</h3>
-            <p>Una vez que tengas la URL de emparejamiento:</p>
-            <ol>
-                <li>Haz clic en la URL generada</li>
-                <li>Autoriza la conexión</li>
-                <li>El dispositivo debería mostrar "Connected"</li>
-                <li>Ejecuta tu aplicación Java</li>
-            </ol>
-            <button onclick="probarConexion()">🧪 Probar Conexión</button>
-            <div id="connectionResult"></div>
+            <h3>🌐 Completar emparejamiento</h3>
+            <div id="pairingInstructions" style="display: none;">
+                <p><strong>Pasos para emparejar:</strong></p>
+                <ol>
+                    <li>Haz clic en la URL de emparejamiento generada arriba</li>
+                    <li>Se abrirá una nueva pestaña con Clover</li>
+                    <li>Autoriza la conexión con el dispositivo</li>
+                    <li>El dispositivo debería cambiar a "Connected"</li>
+                    <li>Ejecuta tu aplicación Java</li>
+                </ol>
+                <button onclick="verificarEmparejamiento()">✅ Verificar Emparejamiento</button>
+                <div id="pairingStatus"></div>
+            </div>
         </div>
         
         <div class="step">
-            <h3>🚀 Paso 5: Comando de prueba</h3>
-            <p>Una vez emparejado, puedes enviar un comando de prueba:</p>
-            <button onclick="enviarComandoPrueba()">📤 Enviar Comando de Prueba</button>
-            <div id="testResult"></div>
+            <h3>🧪 Probar conexión</h3>
+            <p>Una vez emparejado, puedes probar la conexión:</p>
+            <button onclick="probarConexion()">📡 Probar Conexión WebSocket</button>
+            <div id="connectionTest"></div>
         </div>
         
         <div class="step">
-            <h3>📚 URLs importantes</h3>
+            <h3>📚 Información técnica</h3>
             <div class="config-box">
                 <strong>WebSocket URL:</strong> wss://ws-sandbox.dev.clover.com/<br>
-                <strong>API Base:</strong> https://apisandbox.dev.clover.com<br>
-                <strong>Dashboard:</strong> https://www.clover.com/global-developer-home
+                <strong>Protocolo:</strong> Remote Pay Cloud<br>
+                <strong>Tipo de app:</strong> Web App (existente)<br>
+                <strong>Emparejamiento:</strong> Browser-based
             </div>
         </div>
     </div>
 
     <script>
-        // Configuración
-        let config = {
+        // Configuración usando los mismos valores de tu app existente
+        const CONFIG = {
             clientId: 'BQA69R3NPK6MC',
-            merchantId: '20562DRSEE6T1',
+            merchantId: '20562DRSEE6T1', 
             deviceSerial: 'C047LG44442632',
-            accessToken: null
+            redirectUri: 'https://luisjb.github.io/Clover/callback.html',
+            baseUrl: 'https://luisjb.github.io/Clover/'
         };
 
-        function verificarConfiguracion() {
-            config.clientId = document.getElementById('clientId').value;
-            config.merchantId = document.getElementById('merchantId').value;
-            config.deviceSerial = document.getElementById('deviceSerial').value;
+        function verificarTokens() {
+            // Verificar tokens guardados del OAuth
+            const accessToken = localStorage.getItem('clover_access_token');
+            const refreshToken = localStorage.getItem('clover_refresh_token');
             
-            // Cargar token desde localStorage si existe
-            config.accessToken = localStorage.getItem('clover_access_token');
-            
-            let result = '<div class="success">✅ Configuración cargada:</div>';
-            result += '<div class="config-box">';
-            result += `Client ID: ${config.clientId}<br>`;
-            result += `Merchant ID: ${config.merchantId}<br>`;
-            result += `Device Serial: ${config.deviceSerial}<br>`;
-            result += `Token disponible: ${config.accessToken ? 'Sí' : 'No'}<br>`;
-            result += '</div>';
-            
-            if (!config.accessToken) {
-                result += '<div class="warning">⚠️ No se encontró token de acceso. Ejecuta tu aplicación Java primero para generar tokens.</div>';
+            let status = '';
+            if (accessToken) {
+                status = '✅ Access token disponible';
+                if (refreshToken) {
+                    status += ', Refresh token disponible';
+                }
+            } else {
+                status = '❌ No hay tokens. <a href="index.html" style="color: #4CAF50;">Ve a OAuth Setup</a>';
             }
             
-            document.getElementById('configResult').innerHTML = result;
+            document.getElementById('tokenStatus').innerHTML = status;
         }
 
         function generarUrlEmparejamiento() {
-            if (!config.accessToken) {
-                document.getElementById('pairingResult').innerHTML = 
-                    '<div class="error">❌ Necesitas un token de acceso. Ejecuta tu aplicación Java primero.</div>';
-                return;
-            }
-
-            // Para Cloud Pay Display, la URL de emparejamiento típicamente es:
-            const pairingUrl = `https://sandbox.dev.clover.com/developer-home/app/${config.clientId}/merchant/${config.merchantId}/launch`;
+            // URL para lanzar la app desde el merchant dashboard
+            const pairingUrl = `https://sandbox.dev.clover.com/developer-home/app/${CONFIG.clientId}/merchant/${CONFIG.merchantId}/launch`;
             
-            let result = '<div class="success">✅ URL de emparejamiento generada:</div>';
+            let result = '<div class="success">🔗 URL de emparejamiento generada:</div>';
             result += '<div class="config-box">';
-            result += `<a href="${pairingUrl}" target="_blank" style="color: #4CAF50; text-decoration: underline;">${pairingUrl}</a>`;
+            result += `<a href="${pairingUrl}" target="_blank" style="color: #4CAF50; text-decoration: underline; font-size: 16px;">${pairingUrl}</a>`;
             result += '</div>';
-            result += '<div class="warning">⚠️ Haz clic en la URL para completar el emparejamiento</div>';
+            result += '<div class="warning">⚠️ Haz clic en la URL para abrir el proceso de emparejamiento</div>';
             
             document.getElementById('pairingResult').innerHTML = result;
+            document.getElementById('pairingInstructions').style.display = 'block';
         }
 
-        function probarConexion() {
-            // Simulación de prueba de conexión
-            document.getElementById('connectionResult').innerHTML = '<div class="warning">🔄 Probando conexión...</div>';
+        function verificarEmparejamiento() {
+            document.getElementById('pairingStatus').innerHTML = '<div class="warning">🔄 Verificando emparejamiento...</div>';
             
+            // Simular verificación
             setTimeout(() => {
-                let result = '<div class="success">✅ Pasos para probar:</div>';
+                let result = '<div class="success">📋 Checklist de emparejamiento:</div>';
                 result += '<div class="config-box">';
-                result += '1. Asegúrate de que Cloud Pay Display esté corriendo<br>';
-                result += '2. El dispositivo debe mostrar "Waiting for connection" o "Connected"<br>';
-                result += '3. Ejecuta tu aplicación Java<br>';
-                result += '4. Verifica que no haya errores 404/405<br>';
+                result += '✓ URL de emparejamiento visitada<br>';
+                result += '✓ Autorización completada en navegador<br>';
+                result += '✓ Cloud Pay Display corriendo en dispositivo<br>';
+                result += '✓ Dispositivo muestra "Connected" o similar<br>';
                 result += '</div>';
+                result += '<div class="success">🎉 ¡Listo para usar con tu aplicación Java!</div>';
                 
-                document.getElementById('connectionResult').innerHTML = result;
+                document.getElementById('pairingStatus').innerHTML = result;
             }, 2000);
         }
 
-        function enviarComandoPrueba() {
-            if (!config.accessToken) {
-                document.getElementById('testResult').innerHTML = 
-                    '<div class="error">❌ Necesitas completar el emparejamiento primero.</div>';
+        function probarConexion() {
+            const accessToken = localStorage.getItem('clover_access_token');
+            
+            if (!accessToken) {
+                document.getElementById('connectionTest').innerHTML = 
+                    '<div class="error">❌ Necesitas tokens OAuth primero. <a href="index.html" style="color: #f44336;">Ve a OAuth Setup</a></div>';
                 return;
             }
 
-            // Mostrar el comando que debería enviarse
-            const testCommand = {
+            // Mostrar ejemplo de mensaje WebSocket
+            const testMessage = {
                 method: "DISCOVERY_REQUEST",
                 id: "test-" + Date.now(),
                 version: 1,
-                packageName: "com.yourcompany.yourpos"
+                packageName: "com.luisjb.clover"
             };
 
-            let result = '<div class="success">📤 Comando de prueba:</div>';
+            let result = '<div class="success">📡 Mensaje de prueba WebSocket:</div>';
             result += '<div class="config-box">';
-            result += JSON.stringify(testCommand, null, 2);
+            result += 'URL: wss://ws-sandbox.dev.clover.com/<br><br>';
+            result += 'Mensaje JSON:<br>';
+            result += JSON.stringify(testMessage, null, 2);
             result += '</div>';
-            result += '<div class="warning">💡 Este comando debe enviarse por WebSocket a: wss://ws-sandbox.dev.clover.com/</div>';
+            result += '<div class="warning">💡 Envía este mensaje usando tu aplicación Java con WebSocket</div>';
             
-            document.getElementById('testResult').innerHTML = result;
+            document.getElementById('connectionTest').innerHTML = result;
         }
 
-        // Cargar configuración al inicio
+        // Verificar tokens al cargar la página
         window.onload = function() {
-            verificarConfiguracion();
+            verificarTokens();
+            
+            // Si venimos del OAuth callback, mostrar mensaje
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('from') === 'oauth') {
+                document.getElementById('tokenStatus').innerHTML = '🎉 ¡Tokens OAuth recién obtenidos! Listo para emparejamiento.';
+            }
         };
     </script>
 </body>

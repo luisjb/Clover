@@ -3,278 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clover Cloud Pay Display - Emparejamiento</title>
+    <title>Mi Integración con Clover</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            margin: 0;
             color: white;
-            padding: 20px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
         }
         
-        .nav {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
             margin-bottom: 20px;
+            display: block;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .cta-section {
             text-align: center;
-        }
-        
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            padding: 8px 16px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .nav a:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        
-        .step {
+            padding: 60px 0;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid #4CAF50;
+            border-radius: 20px;
+            margin: 40px 0;
         }
         
-        .config-box {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-        }
-        
-        button {
+        .btn {
+            display: inline-block;
             background: linear-gradient(45deg, #4CAF50, #45a049);
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px 5px;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
         
-        button:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
         
-        .success { color: #4CAF50; }
-        .error { color: #f44336; }
-        .warning { color: #FF9800; }
+        .btn-secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
         
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+        
+        .status-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-connected { background: #4CAF50; }
+        .status-pending { background: #FF9800; }
+        .status-error { background: #f44336; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5em; }
+            .header p { font-size: 1.1em; }
+            .container { padding: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Navegación entre páginas -->
-        <div class="nav">
-            <a href="index.html">🔐 OAuth Setup</a>
-            <a href="pairing.html">🔗 Device Pairing</a>
-            <a href="callback.html">📞 OAuth Callback</a>
+        <div class="header">
+            <h1>🚀 Mi Integración POS</h1>
+            <p>Conecta tu sistema Point of Sale con Clover para procesar pagos de forma segura y eficiente</p>
         </div>
-        
-        <h1>🔗 Cloud Pay Display Pairing</h1>
-        
-        <div class="step">
-            <h3>📋 Configuración automática</h3>
-            <p>Usando la configuración de tu app existente:</p>
-            <div class="config-box" id="autoConfig">
-                <strong>Client ID:</strong> BQA69R3NPK6MC<br>
-                <strong>Merchant ID:</strong> 20562DRSEE6T1<br>
-                <strong>Device Serial:</strong> C047LG44442632<br>
-                <strong>Tokens:</strong> <span id="tokenStatus">Verificando...</span>
-            </div>
-            <button onclick="verificarTokens()">🔄 Verificar Tokens</button>
-        </div>
-        
-        <div class="step">
-            <h3>🔗 Generar URL de emparejamiento</h3>
-            <p>Esta URL conectará tu aplicación Java con el dispositivo:</p>
-            <button onclick="generarUrlEmparejamiento()">🚀 Generar URL de Emparejamiento</button>
-            <div id="pairingResult"></div>
-        </div>
-        
-        <div class="step">
-            <h3>📱 Configurar Cloud Pay Display</h3>
-            <div class="config-box">
-                <strong>En tu dispositivo Clover Pocket:</strong><br>
-                1. Ve a "More Tools"<br>
-                2. Busca "Cloud Pay Display" (NO "REST Pay Display")<br>
-                3. Instala Cloud Pay Display si no está instalado<br>
-                4. Abre Cloud Pay Display<br>
-                5. La pantalla debería mostrar "Waiting for connection"
+
+        <div class="status-section">
+            <h3>📊 Estado de la Integración</h3>
+            <div id="connection-status">
+                <p><span class="status-indicator status-pending"></span> Verificando conexión con Clover...</p>
             </div>
         </div>
-        
-        <div class="step">
-            <h3>🌐 Completar emparejamiento</h3>
-            <div id="pairingInstructions" style="display: none;">
-                <p><strong>Pasos para emparejar:</strong></p>
-                <ol>
-                    <li>Haz clic en la URL de emparejamiento generada arriba</li>
-                    <li>Se abrirá una nueva pestaña con Clover</li>
-                    <li>Autoriza la conexión con el dispositivo</li>
-                    <li>El dispositivo debería cambiar a "Connected"</li>
-                    <li>Ejecuta tu aplicación Java</li>
+
+        <div class="features">
+            <div class="feature-card">
+                <span class="feature-icon">💳</span>
+                <h3>Procesamiento de Pagos</h3>
+                <p>Acepta tarjetas de crédito, débito y otros métodos de pago directamente desde tu POS</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h3>Dispositivos Pocket & Flex</h3>
+                <p>Compatible con terminales móviles Clover Pocket y Flex para máxima flexibilidad</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3>Seguridad PCI</h3>
+                <p>Cumple con los estándares de seguridad PCI DSS para proteger los datos de tus clientes</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3>Reportes en Tiempo Real</h3>
+                <p>Accede a reportes detallados de ventas y transacciones desde tu dashboard</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <h3>Sincronización Automática</h3>
+                <p>Mantén tu inventario y órdenes sincronizados entre Clover y tu sistema</p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>API REST</h3>
+                <p>Integración completa usando la API REST v3 de Clover con OAuth 2.0</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>🔗 Conectar con Clover</h2>
+            <p style="margin-bottom: 30px;">Para comenzar a usar esta integración, necesitas autorizar el acceso a tu cuenta de Clover</p>
+            
+            <a href="#" class="btn" id="connect-btn" onclick="startOAuth()">
+                🔐 Conectar con Clover
+            </a>
+            
+            <a href="/Clover/callback" class="btn btn-secondary">
+                🔧 Probar Callback
+            </a>
+            <a href="/Clover/pairing.html" class="btn btn-secondary">
+                🔗 Device Pairing
+            </a>
+            
+            <div style="margin-top: 30px;">
+                <h4>📋 ¿Qué sucede cuando te conectas?</h4>
+                <ol style="text-align: left; max-width: 500px; margin: 20px auto;">
+                    <li>Serás redirigido a Clover para autorizar la conexión</li>
+                    <li>Otorgas permisos para acceder a órdenes y pagos</li>
+                    <li>Recibes tokens de acceso seguros para la API</li>
+                    <li>Tu POS queda conectado y listo para procesar pagos</li>
                 </ol>
-                <button onclick="verificarEmparejamiento()">✅ Verificar Emparejamiento</button>
-                <div id="pairingStatus"></div>
             </div>
         </div>
-        
-        <div class="step">
-            <h3>🧪 Probar conexión</h3>
-            <p>Una vez emparejado, puedes probar la conexión:</p>
-            <button onclick="probarConexion()">📡 Probar Conexión WebSocket</button>
-            <div id="connectionTest"></div>
-        </div>
-        
-        <div class="step">
-            <h3>📚 Información técnica</h3>
-            <div class="config-box">
-                <strong>WebSocket URL:</strong> wss://ws-sandbox.dev.clover.com/<br>
-                <strong>Protocolo:</strong> Remote Pay Cloud<br>
-                <strong>Tipo de app:</strong> Web App (existente)<br>
-                <strong>Emparejamiento:</strong> Browser-based
-            </div>
+
+        <div class="footer">
+            <p>🛠️ Desarrollado para integración con Clover POS | v1.0.0</p>
+            <p>Para soporte técnico, contacta a tu equipo de desarrollo</p>
         </div>
     </div>
 
     <script>
-        // Configuración usando los mismos valores de tu app existente
-        const CONFIG = {
-            clientId: 'BQA69R3NPK6MC',
-            merchantId: '20562DRSEE6T1', 
-            deviceSerial: 'C047LG44442632',
-            redirectUri: 'https://luisjb.github.io/Clover/callback.html',
-            baseUrl: 'https://luisjb.github.io/Clover/'
+        // Configuración OAuth - reemplaza con tus valores reales
+        const OAUTH_CONFIG = {
+            clientId: 'BQA69R3NPK6MC', // Reemplazar
+            redirectUri: window.location.origin + '/Clover/callback',
+            oauthBaseUrl: 'https://sandbox.dev.clover.com' // sandbox
         };
 
-        function verificarTokens() {
-            // Verificar tokens guardados del OAuth
-            const accessToken = localStorage.getItem('clover_access_token');
-            const refreshToken = localStorage.getItem('clover_refresh_token');
-            
-            let status = '';
-            if (accessToken) {
-                status = '✅ Access token disponible';
-                if (refreshToken) {
-                    status += ', Refresh token disponible';
-                }
-            } else {
-                status = '❌ No hay tokens. <a href="index.html" style="color: #4CAF50;">Ve a OAuth Setup</a>';
-            }
-            
-            document.getElementById('tokenStatus').innerHTML = status;
-        }
-
-        function generarUrlEmparejamiento() {
-            // URL para lanzar la app desde el merchant dashboard
-            const pairingUrl = `https://sandbox.dev.clover.com/developer-home/app/${CONFIG.clientId}/merchant/${CONFIG.merchantId}/launch`;
-            
-            let result = '<div class="success">🔗 URL de emparejamiento generada:</div>';
-            result += '<div class="config-box">';
-            result += `<a href="${pairingUrl}" target="_blank" style="color: #4CAF50; text-decoration: underline; font-size: 16px;">${pairingUrl}</a>`;
-            result += '</div>';
-            result += '<div class="warning">⚠️ Haz clic en la URL para abrir el proceso de emparejamiento</div>';
-            
-            document.getElementById('pairingResult').innerHTML = result;
-            document.getElementById('pairingInstructions').style.display = 'block';
-        }
-
-        function verificarEmparejamiento() {
-            document.getElementById('pairingStatus').innerHTML = '<div class="warning">🔄 Verificando emparejamiento...</div>';
-            
-            // Simular verificación
-            setTimeout(() => {
-                let result = '<div class="success">📋 Checklist de emparejamiento:</div>';
-                result += '<div class="config-box">';
-                result += '✓ URL de emparejamiento visitada<br>';
-                result += '✓ Autorización completada en navegador<br>';
-                result += '✓ Cloud Pay Display corriendo en dispositivo<br>';
-                result += '✓ Dispositivo muestra "Connected" o similar<br>';
-                result += '</div>';
-                result += '<div class="success">🎉 ¡Listo para usar con tu aplicación Java!</div>';
-                
-                document.getElementById('pairingStatus').innerHTML = result;
-            }, 2000);
-        }
-
-        function probarConexion() {
-            const accessToken = localStorage.getItem('clover_access_token');
-            
-            if (!accessToken) {
-                document.getElementById('connectionTest').innerHTML = 
-                    '<div class="error">❌ Necesitas tokens OAuth primero. <a href="index.html" style="color: #f44336;">Ve a OAuth Setup</a></div>';
+        function startOAuth() {
+            // Verificar que esté configurado
+            if (OAUTH_CONFIG.clientId === 'TU_CLIENT_ID') {
+                alert('⚠️ Por favor configura tu Client ID en el código antes de continuar');
                 return;
             }
 
-            // Mostrar ejemplo de mensaje WebSocket
-            const testMessage = {
-                method: "DISCOVERY_REQUEST",
-                id: "test-" + Date.now(),
-                version: 1,
-                packageName: "com.luisjb.clover"
-            };
+            // Construir URL de autorización
+            const params = new URLSearchParams({
+                client_id: OAUTH_CONFIG.clientId,
+                redirect_uri: OAUTH_CONFIG.redirectUri,
+                response_type: 'code'
+            });
 
-            let result = '<div class="success">📡 Mensaje de prueba WebSocket:</div>';
-            result += '<div class="config-box">';
-            result += 'URL: wss://ws-sandbox.dev.clover.com/<br><br>';
-            result += 'Mensaje JSON:<br>';
-            result += JSON.stringify(testMessage, null, 2);
-            result += '</div>';
-            result += '<div class="warning">💡 Envía este mensaje usando tu aplicación Java con WebSocket</div>';
+            const authUrl = `${OAUTH_CONFIG.oauthBaseUrl}/oauth/v2/authorize?${params.toString()}`;
             
-            document.getElementById('connectionTest').innerHTML = result;
+            // Redirigir a Clover para autorización
+            window.location.href = authUrl;
         }
 
-        // Verificar tokens al cargar la página
-        window.onload = function() {
-            verificarTokens();
+        function checkConnectionStatus() {
+            const statusDiv = document.getElementById('connection-status');
+            const connectBtn = document.getElementById('connect-btn');
             
-            // Si venimos del OAuth callback, mostrar mensaje
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('from') === 'oauth') {
-                document.getElementById('tokenStatus').innerHTML = '🎉 ¡Tokens OAuth recién obtenidos! Listo para emparejamiento.';
+            // Verificar si hay tokens guardados
+            const accessToken = localStorage.getItem('clover_access_token');
+            
+            if (accessToken) {
+                statusDiv.innerHTML = `
+                    <p><span class="status-indicator status-connected"></span> ✅ Conectado con Clover</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Token válido encontrado. Tu integración está activa.</p>
+                `;
+                connectBtn.textContent = '🔄 Reconectar';
+            } else {
+                statusDiv.innerHTML = `
+                    <p><span class="status-indicator status-pending"></span> ⏳ Sin conexión</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Haz clic en "Conectar con Clover" para autorizar la integración.</p>
+                `;
             }
+        }
+
+        // Verificar parámetros de URL (si viene del merchant redirect)
+        function checkMerchantRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const merchantId = urlParams.get('merchant_id');
+            
+            if (merchantId) {
+                // El merchant fue redirigido aquí desde Clover
+                document.getElementById('connection-status').innerHTML = `
+                    <p><span class="status-indicator status-pending"></span> 🏪 Merchant detectado: ${merchantId}</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Haz clic en "Conectar con Clover" para completar la autorización.</p>
+                `;
+            }
+        }
+
+        // Ejecutar al cargar la página
+        window.onload = function() {
+            checkConnectionStatus();
+            checkMerchantRedirect();
         };
     </script>
 </body>
