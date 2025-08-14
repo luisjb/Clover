@@ -183,6 +183,10 @@
                     // Guardar tokens
                     localStorage.setItem('clover_access_token', data.access_token);
                     localStorage.setItem('clover_refresh_token', data.refresh_token);
+
+                    setTimeout(() => {
+                        window.location.href = 'pairing.html?from=oauth';
+                    }, 3000);
                 } else {
                     document.getElementById('token-result').innerHTML = `
                         <div class="error">
